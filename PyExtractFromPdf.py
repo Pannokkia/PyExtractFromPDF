@@ -12,15 +12,15 @@ def main():
         
         pages = []
         outPdf = ''
-        
-        #Parametri di input
-        inpPDF = input('Source PDF: ')
-        
+
         try:
+            
+            #Parametri di input
+            inpPDF = input('Source PDF: ')
+            
             #Apro file in binary/lettura (PDF Origine)
             f = open(inpPDF, "br")
-      
-        
+
             inpPages = input('Page/pages to extract (ex: 1/1,2,3/1-3): ')
             
             #Nel caso da input ricevo numero pagine tipo 1-3 allora cerco carattere '-' oppure ',' e lo sostituisco con ' '
@@ -34,7 +34,6 @@ def main():
             for page in range(int(pageCounter[0]),int(pageCounter[-1]) + 1):
                 pages.insert(page-1,page-1)
 
-            
             while outPdf == '':
                 outPdf = input('Destination PDF: ').replace('\n','')
             
@@ -52,17 +51,27 @@ def main():
             print("File not accessible!")
             input()
             main()
-        
+    
     elif s  == '2':
         
         pages = []
         outPdf = ''
-        inpPDF = input('Source PDF: ')
-        xString = input('Text to search: ')
-        
+
         try:
+            
+            inpPDF = input('Source PDF: ')
+
             #Apro file in binary/lettura (PDF Origine)
             f = open(inpPDF, "rb")
+            
+            xString = input('Text to search: ')
+             
+            if xString == '':
+                print ('Empty string is not valid!')
+                input()
+                main()
+             
+            
             #Chiamo funzione per cercare all'interno del PDF indicato da input
             pages = findInPdf(f, xString)
         
@@ -93,9 +102,9 @@ def main():
             input()
             main()
     elif s  == '3':
-        #ToDo
+        pass
     elif s  == '4':
-        #ToDo
+        pass
     else:
         print("Bye!:-)")
         exit()
