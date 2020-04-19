@@ -1,3 +1,6 @@
-Aggiungere possibilità di unire più files PDF 
-Aggiungere bookmarks al file PDF
+Aggiungere bookmarks al file PDF manualmente
+Aggiungere bookmarks al file PDF tramite file di configurazione
+Aggiungere possibilità di unire più files PDF
+
+
 
