@@ -102,9 +102,65 @@ def main():
             input()
             main()
     elif s  == '3':
-        pass
+        try:
+            # even_odd_flag = 0 per estrarre pagine pari
+            even_odd_flag = 0
+            
+            outPdf = ''
+            inpPDF = input('Source PDF: ')
+
+            #Apro file in binary/lettura (PDF Origine)
+            f = open(inpPDF, "rb")
+            
+            #Chiamo funzione per per estrarre solo pagine pari all'interno del PDF indicato da input
+            pages = evenOddPages(f,even_odd_flag)
+            
+            while outPdf == '':
+                outPdf = input('Indicare pdf di destinazione: ').replace('\n','')
+                
+            fOut = open(outPdf, "bw")
+            
+            #Chiamo funzione per estrarre le pagine pari
+            res = extractPage(f,fOut,pages)
+            
+            if res:
+                print ('File created correctly.')
+                input()
+                main()
+        except IOError:
+            print("File not accessible!")
+            input()
+            main()
     elif s  == '4':
-        pass
+        try:
+            # even_odd_flag = 1 per estrarre pagine dispari
+            even_odd_flag = 1
+            
+            outPdf = ''
+            inpPDF = input('Source PDF: ')
+
+            #Apro file in binary/lettura (PDF Origine)
+            f = open(inpPDF, "rb")
+            
+            #Chiamo funzione per per estrarre solo pagine pari all'interno del PDF indicato da input
+            pages = evenOddPages(f,even_odd_flag)
+            
+            while outPdf == '':
+                outPdf = input('Indicare pdf di destinazione: ').replace('\n','')
+                
+            fOut = open(outPdf, "bw")
+            
+            #Chiamo funzione per estrarre le pagine pari
+            res = extractPage(f,fOut,pages)
+            
+            if res:
+                print ('File created correctly.')
+                input()
+                main()
+        except IOError:
+            print("File not accessible!")
+            input()
+            main()
     else:
         print("Bye!:-)")
         exit()
@@ -156,12 +212,41 @@ def findInPdf(f, xString):
         input()
         main()
 
+def evenOddPages(f,even_odd_flag):
+    
+    pages = []
+    pdfDoc = PdfFileReader(f)
+    
+    try:
+        
+        for i in range(0, pdfDoc.getNumPages()):
+            
+            #Se numero pagina / 2 restituisce resto 0 allora pagina è pari
+            if even_odd_flag == 0:
+                if i % 2 == 0:    
+                    content = ""
+                    content += pdfDoc.getPage(i).extractText()   
+                    pages.append(i)
+                    print ('Aggiunta pagina: ' + str(i))
+            else:
+                if i % 2 != 0:    
+                    content = ""
+                    content += pdfDoc.getPage(i).extractText()   
+                    pages.append(i)
+                    print ('Aggiunta pagina: ' + str(i))
+        return pages
+         
+    except Exception:
+        print("An error has occured!")
+        input()
+        main()  
+
 def drawMenu():
     print('\n ::—–{ Menu }—-::')
     print('\n1 - Extract page / pages from PDF')
     print('2 - Extract page / pages from PDF contain specific text')
     print('3 - Extract even pages from PDF')
-    print('4 - Extract even pages from PDF')
+    print('4 - Extract odd pages from PDF')
     print('5 - Search for text and extract pages')
     print('0 - Quit')
     print('\n ::—–{ :-)) }—-::')
