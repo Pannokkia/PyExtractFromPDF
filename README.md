@@ -9,5 +9,4 @@ Per avviare il progrmamma avendo installato sulla propria macchina l'interprete 
 
 python PyMenu.py
 
-Nel caso in cui non si abbi l'interprete Python sulla macchina e la macchina è Windows, utilizzare il file .exe presente nella directory 
-'Dist'
+Nel caso in cui non si abbia l'interprete Python sulla macchina e la macchina è Windows, utilizzare il file '.exe' presente nella directory 'Dist'.
