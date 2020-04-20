@@ -26,6 +26,7 @@ def addBookmarks(fIn,fOut,fBookmarks):
        
         while i < fIn.getNumPages():
             while l < len(line):
+                print (i)
                 values =  line[l].split(',')
                 if (int(values[0]) - 1) == i:
                     pdfOutput.addPage(fIn.getPage(i)) # aggiungo pagina a file di destinazione
@@ -34,9 +35,20 @@ def addBookmarks(fIn,fOut,fBookmarks):
                     i += 1
                     break
                 else:
-                    pdfOutput.addPage(fIn.getPage(i)) # aggiungo pagina a file di destinazione    
-                    i += 1
+                    #Nel caso in cui nel file di conf
+                    #sia indicata una pagina oltre il numero massimo di quelle
+                    #del file di input segnalo che non è possibile aggiungere il Bookmark
+                    if (int(values[0]) - 1) < fIn.getNumPages():
+                        print (i)
+                        pdfOutput.addPage(fIn.getPage(i)) # aggiungo pagina a file di destinazione    
+                        i += 1
+                    else:
+                        print (i)
+                        print (' Could not add bookmark to page: ' + str(int(values[0]) - 1))
+                        input('Push button to continue ...')
+                        break
             l += 1
+            print (i)
             pdfOutput.addPage(fIn.getPage(i)) # aggiungo pagina a file di destinazione  
             i += 1  
 

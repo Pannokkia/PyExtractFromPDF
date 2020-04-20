@@ -26,7 +26,7 @@ def main():
                 
         except IOError:
             print(' File not accessible!')
-            input()
+            input('Push button to continue ...')
             main()
     
     elif s  == '2':
@@ -40,7 +40,7 @@ def main():
              
             if xString == '':
                 print (' Empty string is not valid!')
-                input()
+                input('Push button to continue ...')
                 main()
 
             #Chiamo funzione per cercare all'interno del PDF indicato da input
@@ -53,20 +53,20 @@ def main():
                 
                 if res:
                     print (' File created correctly.')
-                    input()
+                    input('Push button to continue ...')
                     main()
             else:
                 print ( 'No page was found containing the requested text.')
-                input()
+                input('Push button to continue ...')
                 drawMenu()
                 
         except IOError:
             print(" File not accessible!")
-            input()
+            input('Push button to continue ...')
             main()
         except Exception:
             print(" An error has occured!")
-            input()
+            input('Push button to continue ...')
             main()
     elif s  == '3':
         try:
@@ -85,11 +85,11 @@ def main():
             
             if res:
                 print (' File created correctly.')
-                input()
+                input('Push button to continue ...')
                 main()
         except IOError:
             print(' File not accessible!')
-            input()
+            input('Push button to continue ...')
             main()
     elif s  == '4':
         try:
@@ -107,11 +107,11 @@ def main():
             
             if res:
                 print (' File created correctly.')
-                input()
+                input('Push button to continue ...')
                 main()
         except IOError:
             print(" File not accessible!")
-            input()
+            input('Push button to continue ...')
             main()
             
     elif s  == '5':
@@ -126,12 +126,16 @@ def main():
             
             if res:
                 print (' File and bookmarks created correctly.')
-                input()
+                input('Push button to continue ...')
+                main()
+            else:
+                print (' An error has occurred!')
+                input('Push button to continue ...')
                 main()
                 
         except IOError:
             print(" File not accessible!")
-            input()
+            input('Push button to continue ...')
             main()
     else:
         print(" Bye!:-)")
