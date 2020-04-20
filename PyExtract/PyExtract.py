@@ -8,7 +8,7 @@ sys.path.append(".")
 import PyMenu
 
 # Funzione per estrarre le pagine dal PDF di origine
-def extractPage(f, fOut, pages):
+def extractPage(f, fOut, pages,s):
 
     try:
         
@@ -19,7 +19,10 @@ def extractPage(f, fOut, pages):
             pdfOutput.addPage(pdfInput.getPage(i))
 
         pdfOutput.write(fOut)
-        fOut.close()
+        
+        if s != 5:
+            fOut.close()
+            
         f.close()
         return True
     
@@ -28,6 +31,7 @@ def extractPage(f, fOut, pages):
         input()
         PyMenu.drawMenu()
 
+#Funzione ricerca testo in file PDF
 def findInPdf(f, xString):
     
     pages = []
@@ -54,6 +58,7 @@ def findInPdf(f, xString):
         input()
         PyMenu.drawMenu()
 
+#Funzione per estrapolare pagine pari/dispari da PDF
 def evenOddPages(f,even_odd_flag):
     
     pages = []

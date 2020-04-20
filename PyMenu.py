@@ -1,4 +1,6 @@
 import PyExtract.PyExtract
+import PyBookmarks.PyBookmarks
+from PyPDF2 import  PdfFileReader
 
 def main():
 
@@ -12,22 +14,10 @@ def main():
             pages = []
 
             #Chiedo all'utente PDF di origine e PDF di destinazione
-            fIn, fOut = getSourceDestination()
+            fIn, fOut, fBookmarks,inpPages = getSourceDestination(1)
 
-            inpPages = input(' Page/pages to extract (ex: 1/1,2,3/1-3): ')
-            
-            #Nel caso da input ricevo numero pagine tipo 1-3 allora cerco carattere '-' oppure ',' e lo sostituisco con ' '
-            if inpPages.find('-') | inpPages.find(','):
-                inpPages = inpPages.replace('-',' ').replace(',',' ') 
-                #Inserisco in una lista i valori letti da input e normalizzati
-                pageCounter = inpPages.split(' ')
-            
-            #Creo un tange con elementi inseriti nella lista precedentemente e ciclo per aggiungere a
-            #lista pages le pagine che devo estrarre (in python il primo indice )
-            for page in range(int(pageCounter[0]),int(pageCounter[-1]) + 1):
-                pages.insert(page-1,page-1)
-
-            res = PyExtract.PyExtract.extractPage(fIn, fOut, pages)
+            #Chiamo funzione per estrarre le pagine dal PDF
+            res = PyExtract.PyExtract.extractPage(fIn, fOut, inpPages,1)
             
             if res:
                 print (' File created correctly.')
@@ -44,7 +34,7 @@ def main():
         try:
             
             #Chiedo all'utente PDF di origine e PDF di destinazione
-            fIn, fOut = getSourceDestination()
+            fIn, fOut, fBookmarks,pages = getSourceDestination()
 
             xString = input(' Text to search: ')
              
@@ -59,7 +49,7 @@ def main():
             if  len(pages) != 0:
                 
                 #Chiamo funzione per estrarre le pagine dove ho trovato il testo
-                res = PyExtract.PyExtract.extractPage(fIn,fOut,pages)
+                res = PyExtract.PyExtract.extractPage(fIn,fOut,pages,2)
                 
                 if res:
                     print (' File created correctly.')
@@ -84,14 +74,14 @@ def main():
             even_odd_flag = 0
             
             #Chiedo all'utente PDF di origine e PDF di destinazione
-            fIn, fOut = getSourceDestination()
+            fIn, fOut, fBookmarks,pages = getSourceDestination()
 
             #Chiamo funzione per per estrarre solo pagine pari all'interno del PDF indicato da input
             pages = PyExtract.PyExtract.evenOddPages(fIn,even_odd_flag)
             
 
             #Chiamo funzione per estrarre le pagine pari
-            res = PyExtract.PyExtract.extractPage(fIn,fOut,pages)
+            res = PyExtract.PyExtract.extractPage(fIn,fOut,pages,3)
             
             if res:
                 print (' File created correctly.')
@@ -107,18 +97,38 @@ def main():
             even_odd_flag = 1
             
             #Chiedo all'utente PDF di origine e PDF di destinazione
-            fIn, fOut = getSourceDestination()
+            fIn, fOut, fBookmarks, pages = getSourceDestination()
 
             #Chiamo funzione per per estrarre solo pagine pari all'interno del PDF indicato da input
             pages = PyExtract.PyExtract.evenOddPages(fIn,even_odd_flag)
             
-            #Chiamo funzione per estrarre le pagine pari
-            res = PyExtract.PyExtract.extractPage(fIn,fOut,pages)
+            #Chiamo funzione per estrarre le pagine dispari
+            res = PyExtract.PyExtract.extractPage(fIn,fOut,pages,4)
             
             if res:
                 print (' File created correctly.')
                 input()
                 main()
+        except IOError:
+            print(" File not accessible!")
+            input()
+            main()
+            
+    elif s  == '5':
+        
+        try:
+            
+            #Chiedo all'utente PDF di origine e PDF di destinazione
+            fIn, fOut, fBookmarks,pages = getSourceDestination(5)
+
+
+            res = PyBookmarks.PyBookmarks.addBookmarks(fIn,fOut,fBookmarks)
+            
+            if res:
+                print (' File and bookmarks created correctly.')
+                input()
+                main()
+                
         except IOError:
             print(" File not accessible!")
             input()
@@ -133,15 +143,21 @@ def drawMenu():
     print(' 2 - Extract page / pages from PDF contain specific text')
     print(' 3 - Extract even pages from PDF')
     print(' 4 - Extract odd pages from PDF')
-    print(' 5 - Search for text and extract pages')
+    print(' 5 - Add bookmarks from configuration file')
     print(' 0 - Quit')
     print('\n ::—–{ :-)) }—-::')
     s = (input('\n Seleziona una voce del menu: '))
     return s
-def getSourceDestination():
+
+#Funzione che richiede input all'utente
+def getSourceDestination(s = 0):
     
         inpPDF = ''
         outPdf = ''
+        fBookmarks = ''
+        inpPages = ''
+        
+        pages = [] 
         
         #Pdf sorgente
         while inpPDF == '':
@@ -151,13 +167,39 @@ def getSourceDestination():
         while outPdf == '':
             outPdf = input(' Destination PDF: ').replace('\n','')
         
-        #Apro file in binary/lettura (PDF Origine)
-        fIn = open(inpPDF, "br")
+ 
+       
         
+        if s == 5:
+            fIn = PdfFileReader(open(inpPDF, 'rb')) # open input
+        else:
+             #Apro file in binary/lettura (PDF Origine)
+            fIn = open(inpPDF, "br")
+            
         #Apro file in binary/scrittura (PDF destinazione)
         fOut = open(outPdf, "bw")
         
-        return fIn, fOut
+        if s == 1:        
+            while inpPages == '':
+                inpPages = input(' Page/pages to extract (ex: 1/1,2,3/1-3): ').replace('\n','')
+                
+            #Nel caso da input ricevo numero pagine tipo 1-3 allora cerco carattere '-' oppure ',' e lo sostituisco con ' '
+            if inpPages.find('-') | inpPages.find(','):
+                inpPages = inpPages.replace('-',' ').replace(',',' ') 
+                #Inserisco in una lista i valori letti da input e normalizzati
+                pageCounter = inpPages.split(' ')
+            
+            #Creo un range con elementi inseriti nella lista precedentemente e ciclo per aggiungere a
+            #lista pages le pagine che devo estrarre (in python il primo indice )
+            for page in range(int(pageCounter[0]),int(pageCounter[-1]) + 1):
+                pages.insert(page-1,page-1)
+                
+        if s == 5:
+            while fBookmarks == '':
+                fb = input(' Bookmarks config file: ').replace('\n','')
+                fBookmarks = open(fb, "r")
+               
+        return fIn, fOut,fBookmarks,pages
         
       
         

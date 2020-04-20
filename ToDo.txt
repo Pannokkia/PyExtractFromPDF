@@ -1,5 +1,5 @@
 Aggiungere bookmarks al file PDF manualmente
-Aggiungere bookmarks al file PDF tramite file di configurazione
+Ruotare pagina / pagine
 Aggiungere possibilità di unire più files PDF
 
 
