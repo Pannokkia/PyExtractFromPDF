@@ -166,7 +166,7 @@ def main():
                 main()
     else:
         print(" Bye!:-)")
-        exit()
+        sys.exit(0)
         
 def drawMenu():
     print('\n ::—–{ Menu }—-::')

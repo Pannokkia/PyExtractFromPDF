@@ -24,7 +24,7 @@ Compression levels:
     4: screen
 """
 
-def compressPDF(fIn, fOut,compress_level=0):
+def compressPDF(fIn, fOut,compress_level):
     
     try:
 
