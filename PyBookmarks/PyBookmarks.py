@@ -1,3 +1,7 @@
+"""
+MIT license -- free to use as you want, cheers.
+"""
+
 from PyPDF2 import PdfFileReader, PdfFileWriter
 import sys
 
@@ -22,7 +26,7 @@ def addBookmarks(fIn,fOut,fBookmarks):
         #Leggo file di configurazione Bookmarks
         line = fBookmarks.readlines()
         l = 0
-        i = 0;
+        i = 0
        
         while i < fIn.getNumPages():
             while l < len(line):

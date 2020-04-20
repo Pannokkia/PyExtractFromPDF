@@ -1,3 +1,7 @@
+"""
+MIT license -- free to use as you want, cheers.
+"""
+
 from PyPDF2 import PdfFileReader, PdfFileWriter
 import glob
 import os

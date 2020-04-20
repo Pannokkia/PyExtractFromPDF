@@ -1,0 +1,1 @@
+pyinstaller --clean -y -n "PyExtractPDF" PyMenu.py
