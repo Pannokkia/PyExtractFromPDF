@@ -5,6 +5,8 @@ MIT license -- free to use as you want, cheers.
 import PyExtract.PyExtract
 import PyBookmarks.PyBookmarks
 import PyCompress.PyCompress
+import PyConvertToImage.PyConvertToImage
+
 from PyPDF2 import  PdfFileReader
 import os, sys
 
@@ -164,6 +166,28 @@ def main():
                 print(" An error has occured!")
                 input(' Push button to continue ...')
                 main()
+                
+    elif s  == '7':
+        
+        try:
+            #Chiedo all'utente PDF di origine e directory di destinazione file/files jpg
+            fIn, outPathJPG = getSourceDestination(7)
+
+            res = PyConvertToImage.PyConvertToImage.convertToImg(fIn,outPathJPG)
+            
+            if res:
+                print (' Image file created correctly.')
+                input(' Push button to continue ...')
+                main()
+            else:
+                print (' An error has occurred!')
+                input(' Push button to continue ...')
+                main()
+        
+        except Exception:
+                print(" An error has occured!")
+                input(' Push button to continue ...')
+                main()
     else:
         print(" Bye!:-)")
         sys.exit(0)
@@ -176,6 +200,7 @@ def drawMenu():
     print(' 4 - Extract odd pages from PDF')
     print(' 5 - Add bookmarks from configuration file')
     print(' 6 - Reduce PDF size (using GS :-))')
+    print(' 7 - Convert PDF to images (using GS :-))')
     print(' 0 - Quit')
     print('\n ::—–{ :-)) }—-::')
     s = (input('\n Seleziona una voce del menu: '))
@@ -190,6 +215,7 @@ def getSourceDestination(s = 0):
         inpPages = ''
         fIn = ''
         fOut = ''
+        outPathJPG = ''
         pages = [] 
         
         #Pdf sorgente
@@ -207,9 +233,20 @@ def getSourceDestination(s = 0):
             #Apro file in binary/lettura (PDF Origine)
             fIn = open(inpPDF, "br")
         
-        #Pdf destinazione
-        while outPdf == '':
-            outPdf = input(' Destination PDF: ').replace('\n','')
+        
+        if s == 7:
+            while outPathJPG == '':
+                outPathJPG = input(' Destination path image file: ').replace('\n','')
+                
+                if not os.path.isdir(outPathJPG):
+                    os.mkdir(outPathJPG)
+                
+            return inpPDF,outPathJPG
+        
+        else:
+            #Pdf destinazione
+            while outPdf == '':
+                outPdf = input(' Destination PDF: ').replace('\n','')
  
         if not os.path.isdir(os.path.dirname(os.path.abspath(outPdf))):
             print(' Path not accessible!')
