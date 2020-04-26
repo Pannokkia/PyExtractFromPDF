@@ -6,6 +6,7 @@ import PyExtract.PyExtract
 import PyBookmarks.PyBookmarks
 import PyCompress.PyCompress
 import PyConvertToImage.PyConvertToImage
+import PyRotatePage.PyRotatePage
 
 from PyPDF2 import  PdfFileReader
 import os, sys
@@ -26,6 +27,9 @@ def main():
 
             #Chiamo funzione per estrarre le pagine dal PDF
             res = PyExtract.PyExtract.extractPage(fIn, fOut, inpPages,1)
+            
+            #Pulisco pages
+            pages.clear()
             
             if res:
                 print (' File created correctly.')
@@ -53,11 +57,14 @@ def main():
 
             #Chiamo funzione per cercare all'interno del PDF indicato da input
             pages = PyExtract.PyExtract.findInPdf(fIn, xString)
-        
+           
             if  len(pages) != 0:
                 
                 #Chiamo funzione per estrarre le pagine dove ho trovato il testo
                 res = PyExtract.PyExtract.extractPage(fIn,fOut,pages,2)
+                
+                #Pulisco pages
+                pages.clear()
                 
                 if res:
                     print (' File created correctly.')
@@ -67,6 +74,7 @@ def main():
                 print ( 'No page was found containing the requested text.')
                 input(' Push button to continue ...')
                 drawMenu()
+            
                 
         except Exception:
             print(" An error has occured!")
@@ -82,10 +90,12 @@ def main():
 
             #Chiamo funzione per per estrarre solo pagine pari all'interno del PDF indicato da input
             pages = PyExtract.PyExtract.evenOddPages(fIn,even_odd_flag)
-            
-
+    
             #Chiamo funzione per estrarre le pagine pari
             res = PyExtract.PyExtract.extractPage(fIn,fOut,pages,3)
+            
+            #Pulisco pages
+            pages.clear()
             
             if res:
                 print (' File created correctly.')
@@ -111,6 +121,9 @@ def main():
             
             #Chiamo funzione per estrarre le pagine dispari
             res = PyExtract.PyExtract.extractPage(fIn,fOut,pages,4)
+            
+            #Pulisco pages
+            pages.clear()
             
             if res:
                 print (' File created correctly.')
@@ -188,6 +201,33 @@ def main():
                 print(" An error has occured!")
                 input(' Push button to continue ...')
                 main()
+    elif s  == '8':
+        
+        try:
+            pages = []
+
+            #Chiedo all'utente PDF di origine e PDF di destinazione
+            fIn, fOut, inpPages,angle = getSourceDestination(8)
+
+            res = PyRotatePage.PyRotatePage.rotatePage(fIn,fOut,inpPages,angle)
+            
+            
+            #Pulisco pages
+            pages.clear()
+            
+            if res:
+                print (' File created correctly.')
+                input(' Push button to continue ...')
+                main()
+            else:
+                print (' An error has occurred!')
+                input(' Push button to continue ...')
+                main()
+        
+        except IOError:
+                print(" An error has occured!")
+                input(' Push button to continue ...')
+                main()
     else:
         print(" Bye!:-)")
         sys.exit(0)
@@ -201,6 +241,7 @@ def drawMenu():
     print(' 5 - Add bookmarks from configuration file')
     print(' 6 - Reduce PDF size (using GS :-))')
     print(' 7 - Convert PDF to images (using GS :-))')
+    print(' 8 - Rotate PDF page')
     print(' 0 - Quit')
     print('\n ::—–{ :-)) }—-::')
     s = (input('\n Seleziona una voce del menu: '))
@@ -216,6 +257,7 @@ def getSourceDestination(s = 0):
         fIn = ''
         fOut = ''
         outPathJPG = ''
+        angle = ''
         pages = [] 
         
         #Pdf sorgente
@@ -247,34 +289,50 @@ def getSourceDestination(s = 0):
             #Pdf destinazione
             while outPdf == '':
                 outPdf = input(' Destination PDF: ').replace('\n','')
- 
+               
+        
         if not os.path.isdir(os.path.dirname(os.path.abspath(outPdf))):
             print(' Path not accessible!')
             input(' Push button to continue ...')
             main()
-        
-        #Apro file in binary/scrittura (PDF destinazione)
-        fOut = open(outPdf, "bw")
-
+        else:
+            #Apro file in binary/scrittura (PDF destinazione)
+            fOut = open(outPdf, "bw")
+      
        
         #Gestione casi particolari
-        if s == 1:
-            try:    
-                while inpPages == '':
-                    inpPages = input(' Page/pages to extract (ex: 1/1,2,3/1-3): ').replace('\n','')
+        #Se s = 8 chiedo angolo di rotazione        
+        if s == 8:
+            while angle == '':
+                angle = input(' Rotation angle (90,180,270,360...): ').replace('\n','')
+
+        #Se s = 1 oppure s = 8 chiedo numero di pagina / pagine da estrarre   
+        if s == 1 or s == 8:
+            try:
+                
+                if s == 1:
+                    while inpPages == '':
+                        inpPages = input(' Page/pages to extract (ex: 1/1,2,3/1-3): ').replace('\n','')
+                else:
+                    while inpPages == '':
+                        inpPages = input(' Page to rotate: ').replace('\n','')
                     
-                #Nel caso da input ricevo numero pagine tipo 1-3 allora cerco carattere '-' oppure ',' e lo sostituisco con ' '
-                if inpPages.find('-') | inpPages.find(','):
-                    inpPages = inpPages.replace('-',' ').replace(',',' ') 
+                #Nel caso da input ricevo numero pagine tipo 1-3 allora cerco carattere '-' oppure ',' lo sostituisco con ' '
+                if inpPages.find('-') == True:
+                    inpPages = inpPages.replace('-',' ')
                     #Inserisco in una lista i valori letti da input e normalizzati
                     pageCounter = inpPages.split(' ')
-                
-                #Creo un range con elementi inseriti nella lista precedentemente e ciclo per aggiungere a
-                #lista pages le pagine che devo estrarre (in python il primo indice )
-                for page in range(int(pageCounter[0]),int(pageCounter[-1]) + 1):
-                    pages.insert(page-1,page-1)
-                
-                return fIn, fOut,fBookmarks,pages
+                    #Creo un range con elementi inseriti nella lista precedentemente e ciclo per aggiungere a
+                    #lista pages le pagine che devo estrarre (in python il primo indice )
+                    for page in range(int(pageCounter[0]),int(pageCounter[1]) + 1):
+                        pages.insert(page-1,page)
+                else:
+                    pages = inpPages.split(",")       
+
+                if s  != 8:
+                    return fIn, fOut,fBookmarks,pages
+                else:
+                    return fIn, fOut, pages, angle
                     
             except ValueError:
                 print(" Invalid values ​​entered!")

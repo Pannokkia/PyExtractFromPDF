@@ -16,11 +16,12 @@ def extractPage(f, fOut, pages,s):
 
     try:
         
+        
         pdfOutput = PdfFileWriter()
         pdfInput = PdfFileReader(f)
 
         for i in pages:
-            pdfOutput.addPage(pdfInput.getPage(i))
+            pdfOutput.addPage(pdfInput.getPage(int(i)-1))
 
         pdfOutput.write(fOut)
         
@@ -35,12 +36,30 @@ def extractPage(f, fOut, pages,s):
         input()
         PyMenu.drawMenu()
 
+
+def extractPage2(fIn, pages, xString):
+    
+  
+        pdfOutput = PdfFileWriter()
+        pdfInput = PdfFileReader(fIn)
+        
+        fhOut = open('output/' + str(xString).upper().replace(' ','_') + '.pdf','bw+')
+        
+        for i in pages:
+            pdfOutput.addPage(pdfInput.getPage(i))
+        
+        pdfOutput.write(fhOut)
+        fhOut.close()
+
+        return True
+  
+        
 #Funzione ricerca testo in file PDF
 def findInPdf(f, xString):
     
     pages = []
     pdfDoc = PdfFileReader(f)
-    
+    xString = xString.replace('\n','')
     try:
         
         for i in range(0, pdfDoc.getNumPages()):
@@ -48,13 +67,13 @@ def findInPdf(f, xString):
             content = ""
             content += pdfDoc.getPage(i).extractText()
             
-            # content1 = content.encode('ascii', 'ignore').lower()
-            # ResSearch = re.search(xString, content1)
+            #content1 = content.encode('ascii', 'ignore').lower()
+            #ResSearch = re.search(xString, content1)
             
-            if re.search(xString,content):
+            if re.search(xString,content,re.IGNORECASE):
                 pages.append(i)
                 print (' Found text on page: ' + str(i))
-            
+        
         return pages
     
     except Exception:
