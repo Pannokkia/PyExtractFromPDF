@@ -306,6 +306,7 @@ def getSourceDestination(s = 0):
             while angle == '':
                 angle = input(' Rotation angle (90,180,270,360...): ').replace('\n','')
 
+        
         #Se s = 1 oppure s = 8 chiedo numero di pagina / pagine da estrarre   
         if s == 1 or s == 8:
             try:
@@ -318,7 +319,8 @@ def getSourceDestination(s = 0):
                         inpPages = input(' Page to rotate: ').replace('\n','')
                     
                 #Nel caso da input ricevo numero pagine tipo 1-3 allora cerco carattere '-' oppure ',' lo sostituisco con ' '
-                if inpPages.find('-') == True:
+                r = inpPages.find('-')
+                if r != -1:
                     inpPages = inpPages.replace('-',' ')
                     #Inserisco in una lista i valori letti da input e normalizzati
                     pageCounter = inpPages.split(' ')
